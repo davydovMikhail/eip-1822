@@ -10,17 +10,22 @@ describe("eip-1822", function () {
     const Proxy = await ethers.getContractFactory("Proxy");
     const proxyE = await Proxy.deploy(constructdata, myFinalContract.address);
     await proxyE.deployed();
-    const proxy = MyFinalContract.attach(proxyE.address)
+    let proxy = MyFinalContract.attach(proxyE.address)
     await proxy.increment()
     const checkUint = await proxy.myUint()
     console.log(checkUint)
     await proxy.decrement()
     const checkUint1 = await proxy.myUint()
     console.log(checkUint1)
+    await proxy.increment()
+    await proxy.increment()
     const NewContract = await ethers.getContractFactory("NewContract");
     const newContract = await NewContract.deploy();
     await newContract.deployed();
+    proxy = NewContract.attach(proxyE.address)
     await proxy.updateCode(newContract.address)
     await proxy.double()
+    const checkUint2 = await proxy.myUint()
+    console.log(checkUint2)
   });
 });
