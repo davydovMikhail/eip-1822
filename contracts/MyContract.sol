@@ -13,7 +13,7 @@ contract MyContract {
     }
 
     function increment() public {
-        //require(msg.sender == owner, "Only the owner can increment"); //someone forget to uncomment this
+        require(msg.sender == owner, "Only the owner can increment"); //someone forget to uncomment this
         myUint++;
     }
 }

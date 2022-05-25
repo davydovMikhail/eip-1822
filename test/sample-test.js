@@ -7,12 +7,20 @@ describe("eip-1822", function () {
     const myFinalContract = await MyFinalContract.deploy();
     await myFinalContract.deployed();
     const constructdata = web3.utils.sha3('constructor1()').substring(0, 10)
-    console.log('constructdata', constructdata);
     const Proxy = await ethers.getContractFactory("Proxy");
-    const proxy = await Proxy.deploy(constructdata, myFinalContract.address);
-    await proxy.deployed();
-    // await myFinalContract.updateCode(proxy.address)
-    // const checkUint = await proxy.myUint()
-    // console.log(checkUint)
+    const proxyE = await Proxy.deploy(constructdata, myFinalContract.address);
+    await proxyE.deployed();
+    const proxy = MyFinalContract.attach(proxyE.address)
+    await proxy.increment()
+    const checkUint = await proxy.myUint()
+    console.log(checkUint)
+    await proxy.decrement()
+    const checkUint1 = await proxy.myUint()
+    console.log(checkUint1)
+    const NewContract = await ethers.getContractFactory("NewContract");
+    const newContract = await NewContract.deploy();
+    await newContract.deployed();
+    await proxy.updateCode(newContract.address)
+    await proxy.double()
   });
 });
